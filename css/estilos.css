@@ -92,15 +92,25 @@ body{
 }
 div[class^='col']{
   width: 14.28%;
-  display: flex;
+  display: flex;       
   flex-flow: column wrap;
   justify-content: flex-end;
   align-items: center;
-
 }
 
 .elemento{
   width: 99.4px;
   height: 96px;
-
 }
+
+/* Clases para eliminar posteriormente*/
+
+.activaElemento{
+  background-color:yellow;
+}
+
+.sobreElemento{
+  background-color: aqua;
+}
+
+/***************************************/
