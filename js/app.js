@@ -1,25 +1,25 @@
 //Guarda la diferencia del desplazamiento para hacer la comparación de desplazamiento
 //pero siempre va a ser positivo.
 var op = 0; 
-//Guarda el valor de op en negativo o positivo según sea el caso para determinar si
-//el desplazamiento se hizo en y o -y 
-var desplazamiento = 0; 
-//Ultimo elemento drag 
-var ultElemDrag = 0;
-//Último elemento drop
-var ultElemDrop = 0;
+/*Guarda dos valores "subio" o  "bajo" para saber que animación se debe hacer
+ en el elemento droppable*/ 
+var desplazamiento = ""; 
 //Registro de posiciones de los elementos
 var arrPosicion=[
-    //posElm = se guardará la última posición del elemento
-    //dragElm = se sabrá si el elemento fue o no arrastrado por el mouse
+    //nomElm = guarda el nombre del elemento para encontrarlo y cambiar propiedades del objeto
+    //posElm = se guardará la última posición "aceptada" del elemento
+    /*dragElm = se sabrá si el elemento fue o no arrastrado por el mouse, ya que al eliminar un
+                elemento, ocasionará que los elementos NO arrastrados se reubiquen automáticamente
+                con un valor en el top de 0px, mientras que aquellos que SI fueron arrastrados se 
+                quedan en la misma posición*/
     //estado = Se conocerá si el elemento fue eliminado o no.
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 0
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 1
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 2
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 3
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 4
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 5
-    {posInicial: 0, dragElm: false, estado:true},//Elemento 6
+    {nomElm : "elm0", posInicial: 0, dragElm: false, estado:true},
+    {nomElm : "elm1", posInicial: 0, dragElm: false, estado:true},
+    {nomElm : "elm2", posInicial: 0, dragElm: false, estado:true},
+    {nomElm : "elm3", posInicial: 0, dragElm: false, estado:true},
+    {nomElm : "elm4", posInicial: 0, dragElm: false, estado:true},
+    {nomElm : "elm5", posInicial: 0, dragElm: false, estado:true},
+    {nomElm : "elm6", posInicial: 0, dragElm: false, estado:true}
 ]
 
 // CAMBIAR COLOR DE TÍTULO
@@ -47,7 +47,7 @@ $(document).ready(function(){
 });
 
 function crearElemento(numElm){
-    var nuevoElemento = $("<a>");
+    var nuevoElemento = $("<div>");
     nuevoElemento.addClass("elemento");
     nuevoElemento.css("border", "1px solid yellow");//Eliminar
     nuevoElemento.text(numElm);//Eliminar
@@ -61,45 +61,80 @@ function crearElemento(numElm){
         containment: '.col-' + (numElm+1),
         drag: function(event, ui){
             /*Se suma el z-index por 100 porque el primer elemento
-              tiene como index 0*/
+              tiene como index 0 y se necesita quetenga prioridad de visualización
+              sino se hace el evento drag fallará */
             $(ui.helper).css("z-index", (numElm + 100));
 
             arrPosicion[numElm].dragElm = true;
             console.log("Drag "+ numElm + " top: ", ui.position.top);
             if(arrPosicion[numElm].posInicial==0 && ui.position.top > 0){
+                desplazamiento = "bajo";
                 op = ui.position.top - arrPosicion[numElm].posInicial;
-                desplazamiento = op;
                 console.log("pasó por la opción 1"); 
             }
             if(arrPosicion[numElm].posInicial==0 && ui.position.top < 0){
+                desplazamiento = "subio";
                 op = ui.position.top - arrPosicion[numElm].posInicial;
-                desplazamiento = op;
-                op = op * (-1);//Lo convertimos en positivo para hace la comparación 
+                op = op * (-1);//Lo convertimos en positivo para hacer la comparación 
                 console.log("pasó por la opción 2"); 
             }
-            if(arrPosicion[numElm].posInicial<0 && ui.position.top >0){
-                op = ui.position.top + arrPosicion[numElm].posInicial;
-                if (op < 0){
-                    desplazamiento = op;
-                    op = op * (-1);//Lo convertimos en positivo para hace la comparación 
-                }
+            if(arrPosicion[numElm].posInicial>0 && ui.position.top == 0){
+                desplazamiento = "subio";
+                op = arrPosicion[numElm].posInicial - ui.position.top;
                 console.log("pasó por la opción 3"); 
             }
-            if(arrPosicion[numElm].posInicial<0 && ui.position.top <0){
+            if(arrPosicion[numElm].posInicial<0 && ui.position.top == 0){
+                desplazamiento = "bajo";
                 op = ui.position.top - arrPosicion[numElm].posInicial;
                 if (op < 0){
-                    desplazamiento = op;
-                    op = op * (-1);//Lo convertimos en positivo para hace la comparación 
+                    op = op * (-1);//Lo convertimos en positivo para hacer la comparación 
                 }
                 console.log("pasó por la opción 4"); 
             }
-            //Se asigna el último elemento arrastrado a la variable global
-            ultElemDrag = numElm;
+            if(arrPosicion[numElm].posInicial<0 && ui.position.top >0){
+                desplazamiento = "bajo";
+                op = ui.position.top - arrPosicion[numElm].posInicial;
+                
+                if (op < 0){
+                    op = op * (-1);//Lo convertimos en positivo para hacer la comparación 
+                }
+                console.log("pasó por la opción 5"); 
+            }
+            if(arrPosicion[numElm].posInicial>0 && ui.position.top <0){
+                desplazamiento = "subio";
+                op = ui.position.top - arrPosicion[numElm].posInicial;
+                
+                if (op < 0){
+                    op = op * (-1);//Lo convertimos en positivo para hacer la comparación 
+                }
+                console.log("pasó por la opción 6"); 
+            }
+            if(arrPosicion[numElm].posInicial<0 && ui.position.top <0){
+                if (arrPosicion[numElm].posInicial < ui.position.top){
+                    desplazamiento = "bajo";                    
+                }else if (arrPosicion[numElm].posInicial > ui.position.top){
+                    desplazamiento = "subio";                    
+                }
 
+                op = ui.position.top - arrPosicion[numElm].posInicial;
+                if (op < 0){
+                    op = op * (-1);//Lo convertimos en positivo para hacer la comparación 
+                }
+                console.log("pasó por la opción 7"); 
+            }
+            if(arrPosicion[numElm].posInicial>0 && ui.position.top > 0){
+                op = ui.position.top - arrPosicion[numElm].posInicial;
+                if (arrPosicion[numElm].posInicial < ui.position.top){
+                    desplazamiento = "bajo";                    
+                }else if (arrPosicion[numElm].posInicial > ui.position.top){
+                    desplazamiento = "subio";
+                    op=op * (-1);                    
+                }
+                console.log("pasó por la opción 8"); 
+            }
             console.log("Posición Inicial : ", arrPosicion[numElm].posInicial,
                         "\nPosición Final : ", ui.position.top,
                         "\nDistancia total: ", op);
-   
         }
     });
     var numCol = ".col-" + 1;
@@ -120,12 +155,22 @@ $(function(){
     arrastrada o se devualve al punto de origen*/
     
     $(".elemento").on("mouseup",function(){
-        console.info("Levantaste el click del elemento", $(this).attr("id") ," / EL valor de op es ", op);
+        console.info("Levantaste el click del elemento ", $(this).attr("id"),
+                     " / La distancia recorrida es de: ", op, "px");
         $(this).css("z-index","0");
-        if(op < 50 || op > 143){
+        //Si sobrepasa las posiciones permitidas, se regresa a su última posición guardada
+        if(op < 50 || op > 144){
+            //Se consulta la posición actual del elemento y se asigna al top
+            ultPosDrag=0;
+            for(var i = 0; i < 7; i++){
+                if (arrPosicion[i].nomElm == $(this).attr("id")){
+                    ultPosDrag = arrPosicion[i].posInicial;
+                    break;
+                }
+            }
             $(this).animate(
                 {
-                    top: 0
+                    top: ultPosDrag
                 }, 
                 1000
             )             
@@ -136,54 +181,91 @@ $(function(){
         activeClass:"activaElemento",
         hoverClass:"sobreElemento",
         accept:".elemento",
-        /*Con drop definimos que vamos a hacer
-          cuando soltemos el elemento dentro del contenedor*/
         drop: function(event, ui){
-            console.log("Drop", $(ui.helper).css("top"));
             /*Verificamos si el desplazamiento se hizo hacia 
               arriba(valor negativo) o viceversa*/
 
-            if (desplazamiento >=0){
-                if((op >= 50) || (op <= 144)){
+            if (desplazamiento == "subio"){
+                if((op >= 50) && (op <= 144)){
+                    console.log("SUBIO ' ", $(ui.helper).attr("id")," ', y se desplazó", op, "px");
+                    /*Se asigna el objeto this a la variable self porque en esta
+                      instancia this hace referencia al elemento drop, y al usarlo
+                      en la funcion de callback hará referencia al elemento drag*/
+                    var self = this;
+                    var posUiHelper = 0;
+                    for (var i = 0; i < 7; i++){
+                        if (arrPosicion[i].nomElm == $(ui.helper).attr("id")){
+                            arrPosicion[i].posInicial -= 96;
+                            posUiHelper = arrPosicion[i].posInicial;
+                            break; 
+                        }
+                    }
+                    
                     $(ui.helper).animate({
-                            top: "+=96"
+                            top: posUiHelper
                         },
-                        1000,
+                        0,
                         function(){
-                            $(this).animate({
-                                    top: "-=96"
+                            console.log("El elemento Drop es :" + $(self).attr("id"));
+
+                            var posSelf = 0;
+                            for (var i = 0; i < 7; i++){
+                                if (arrPosicion[i].nomElm == $(self).attr("id")){
+                                    arrPosicion[i].posInicial += 96;
+                                    posSelf = arrPosicion[i].posInicial;
+                                    break; 
+                                } 
+                            }
+                            $(self).animate({
+                                    top: posSelf
                                 },
                                 1000
                             )
-                            //Guardando la posición del drag
-                            arrPosicion[ultElemDrag].posInicial += 96;
-                            //Guardando la posición del drop
-                            arrPosicion[ultElemDrop].posInicial -= 96;
-                            
                         }
                     )
                 }
-            }else{
-                if((op >= 50) || (op <= 144)){
+            }
+            else{
+                if((op >= 50) && (op <= 144)){
+                    console.log("BAJO ' ", $(ui.helper).attr("id")," ', y se desplazó", op, "px");
+                    
+                    var self = this;
+                    var posUiHelper = 0;
+                    for (var i = 0; i < 7; i++){
+                        if (arrPosicion[i].nomElm == $(ui.helper).attr("id")){
+                            arrPosicion[i].posInicial += 96;
+                            posUiHelper = arrPosicion[i].posInicial;
+                            break; 
+                        }
+                    }
+                    
                     $(ui.helper).animate({
-                            top: "-=96"
+                            top: posUiHelper
                         },
-                        1000,
+                        0,
                         function(){
-                            $(this).animate({
-                                    top: "+=96"
+                            console.log("El elemento Drop es :" + $(self).attr("id"));
+
+                            var posSelf = 0;
+                            for (var i = 0; i < 7; i++){
+                                if (arrPosicion[i].nomElm == $(self).attr("id")){
+                                    arrPosicion[i].posInicial -= 96;
+                                    posSelf = arrPosicion[i].posInicial;
+                                    break; 
+                                } 
+                            }
+                            $(self).animate({
+                                    top: posSelf
                                 },
                                 1000
                             )
-                            //Guardando la posición del drag
-                            arrPosicion[ultElemDrag].posInicial -= 96;
-                            //Guardando la posición del drop
-                            arrPosicion[ultElemDrop].posInicial += 96;   
                         }
                     )
                 }
             }
         },
+        /*El valor 'intersect' permite la intersectación 
+          entre los elementos droppable y draggable*/
         tolerance: 'intersect'
     });
 })
