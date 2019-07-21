@@ -1,3 +1,6 @@
+//String para almacenar los nombres de los elementos que se eliminarán
+var nomElemento = "";
+
 //Contador de movimientos del usuario
 var moveUser = 0;
 
@@ -8,6 +11,12 @@ var op = 0;
 /*Guarda dos valores "subio" o  "bajo" para saber que animación se debe hacer
  en el elemento droppable*/ 
 var desplazamiento = "";
+
+//Contador para la animación de los dulces que se eliminarán
+var cntAnimacion = 0;
+
+//Variable que contendrá la funcion temporizadora de la eliminación de los elementos
+var temporizador = 0;
 
 /*Se guarda la posición de los dulces segun la posición de cada columna*/
 var arrPng = [
@@ -21,6 +30,7 @@ var arrPng = [
 ]
 
 //Arreglo para guardar el elemento que se eliminará según la posición de cada columna
+//siempre y cuando se cumpla la condición de los 3 dulces como mínima cantidad.
 var arrBorrar =[
     [null,null,null,null,null,null,null],
     [null,null,null,null,null,null,null],
@@ -92,6 +102,10 @@ var arrPosicion=[
     
 ]
 
+//Este es un arreglo temporal para detectar si el dulce es eliminado o no de acuerdo a la
+//condición de numeros del mismo dulce, tanto horizontal y vertical y llenar la matriz arrBorrar[]
+var dulce = [[null],[null],[null],[null],[null],[null],[null]];
+
 // CAMBIAR COLOR DE TÍTULO
 $(document).ready(function(){
 
@@ -125,7 +139,7 @@ function numAleatorio(min, max){
 function crearElemento(numElm, numColumn, numPng, numPosElm){
     var nuevoElemento = $("<div>");
     nuevoElemento.addClass("elemento");
-    // nuevoElemento.css("border", "1px solid yellow");//Eliminar
+    nuevoElemento.css("border", "1px solid yellow");//Eliminar
     // nuevoElemento.text(numElm);//Eliminar
     // nuevoElemento.css("color", "white");//Eliminar
     // nuevoElemento.css("font-size", "3em");//Eliminar
@@ -231,38 +245,85 @@ function crearElemento(numElm, numColumn, numPng, numPosElm){
 
 };
 
-function eliminarDulces(){
+/*Función para PARAR la animación de los elementos a eliminar */
+function pararAnimacion(){
+    clearInterval(temporizador);
+    console.log("Ingresó a la función pararAnimación(). FIN DEL BUCLE");
+    //Ocultar el elemento SIN ELIMINARLO
 
-    // var idElCol1 = "";  
-    // var idElCol2 = "";  
-    // var idElCol3 = "";
 
-    // for (var i = 0; i < 49; i++){
-    //     if (arrPosicion[i].numCol == col1 && arrPosicion[i].numPos == pos){
-    //         idElCol1 = arrPosicion[i].nomElm;
-    //     }
-    //     if (arrPosicion[i].numCol == col2 && arrPosicion[i].numPos == pos){
-    //         idElCol2 = arrPosicion[i].nomElm;
-    //     }
-    //     if (arrPosicion[i].numCol == col3 && arrPosicion[i].numPos == pos){
-    //         idElCol3 = arrPosicion[i].nomElm;
-    //     }
-    // }
+    /*Cambiar el número de la posición de cada uno de los elementos
+      que se encuentren encima de aquellos que se eliminarán*/
 
-    // $(idElCol1).remove();
-    // $(idElCol2).remove();
-    // $(idElCol3).remove();
 
-    console.log("Columna 1 : ", idElCol1);
-    console.log("Columna 2 : ", idElCol2);
-    console.log("Columna 3 : ", idElCol3);
-    console.log("Posición eliminada : ", pos);
+    //1ro determinar cuantas posiciones deben correr los elementos
 
-    // console.log ("De las columnas: \n",
-    //             "'" + col1 + "', '" + col2 + "', '" + col3 + "'\n",
-    //             "se eliminó la posición '" + numPos + "'");
+
+    //Segundo realizar el cambio en la variable numpos del arreglo
+
+    //Realizar el 
+
+
+
+    $(nomElemento).remove();
 }
 
+/*Función que se encarga de la animación de los elementos a eliminar*/
+function aniElementos(){
+    cntAnimacion ++;
+    $(nomElemento).animate(
+        {
+            'opacity': '0'
+        },
+        200, 
+        function(){
+            $(this).animate(
+                {
+                    'opacity': '1'
+                },
+                200
+            )
+        }
+    )
+    if(cntAnimacion == 5){
+        console.log("Contador: " + cntAnimacion);
+        pararAnimacion();    
+    }
+        
+}
+/*--------------------------------------------------------- */
+function eliminarDulces(){
+    //Recorremos el arreglo para obtener el id de cada elemento de la matriz
+    nomElemento = "";
+    for(var i = 0; i<7; i++){
+        for(var j = 0; j<7; j++){
+            if (arrBorrar[i][j] != null){
+                for (var p = 0; p < 49; p++){
+                    if (arrPosicion[p].numCol == i+1 && arrPosicion[p].numPos == j){
+
+                        
+
+
+                        if (nomElemento==""){
+                            nomElemento = "#" + arrPosicion[p].nomElm; 
+                        }else{
+                            nomElemento = nomElemento + ",#" + arrPosicion[p].nomElm;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    //ejecutamos la variable temporizadora de la animación 
+    temporizador = setInterval(function(){
+        aniElementos();
+    }, 400);
+}
+
+/*Debido a que al mover un dulce cambia la posición, esta función ordenará en la matriz arrPng
+  los dulces según la posición que aparezc en el arrPosicion, con el fin de realizar la 
+  comparación del alineamiento de los dulces de forma vertical y horizontal*/
 function ordenarDulces(){
     /*Separamos los dulces en cada uno de los arreglos
       que representan cada una de las columnas*/
@@ -315,16 +376,9 @@ function ordenarDulces(){
     }
 }
 
-var dulce = [
-    [null],
-    [null],
-    [null],
-    [null],
-    [null],
-    [null],
-    [null]
-]
-
+/*Una vez ordenados los dulces se utiliza la funcion alineación para determinar en la matriz 
+  arrBorrar los elementos que cumplen la condicion de ser "ELIMINADOS" tanto de forma
+  vertical como horizontal*/
 function alineacion(pos1, pos2, cnt, estado, linea){
     
     if (estado=="agregar"){
@@ -364,6 +418,8 @@ function alineacion(pos1, pos2, cnt, estado, linea){
     }
 }
 
+/*La función comparar dulces, primero ejecuta la función ordenar dulces 
+y luego realiza la verificación de cumplimiento de dulces repetidos*/
 function compararDulces(){
 
     ordenarDulces();
@@ -371,7 +427,9 @@ function compararDulces(){
     console.log(arrPng);
     var elm = 0; 
 
-    //BUSQUEDA HORIZONTAL DE LAS COLUMNAS
+    /*Verifica en la misma posición de todas las columnas si el dulce se repite,
+      si se repite mínimo 3 veces, se incluye en el arreglo dulce[] mediante la función 
+      alineación que a su vez lo colocará en la matriz arrBorrar*/
     for(var i=0; i<7; i++){
         cnt = 0;
 
@@ -407,7 +465,9 @@ function compararDulces(){
         }
     }
 
-    //BUSQUEDA VERTICAL DE LAS COLUMNAS
+    /*Realiza el mismo procedimiento que el for anterior, pero de forma vertical, es decir,
+      verifica dentro de cada columna si tiene elementos repetidos con las mismas condiciones
+      que el arreglo anterior*/
     for(var i=0; i<7; i++){
         cnt = 0;
 
@@ -442,12 +502,13 @@ function compararDulces(){
 
         }
     }
-}
 
+    eliminarDulces();
+}
 
 $(function(){
 
-    //CREAR ELEMENTO
+    //Crear cada elemento (imagen) dentro de cada columna
     var cantElm = $(".elemento");
     if (cantElm.length == 0){
         var nCol=1; //Indica el número de la columna donde se debe posicionar el elemento creado
@@ -468,12 +529,10 @@ $(function(){
 
     console.log(arrPosicion);
 
-    // ordenarDulces();
     compararDulces();
 
     /*Al soltar el click del mouse se evalua si se deja en la posición 
     arrastrada o se devualve al punto de origen*/    
-
     $(".elemento").on("mouseup",function(){
         console.info("Levantaste el click del elemento ", $(this).attr("id"),
                      " / La distancia recorrida es de: ", op, "px");
