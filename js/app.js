@@ -325,13 +325,13 @@ var dulce = [
     [null]
 ]
 
-function lineaHorizontal(j, i, cnt, estado){
+function alineacion(pos1, pos2, cnt, estado, linea){
     
     if (estado=="agregar"){
-        dulce[j] = i;
+        dulce[pos1] = pos2;
     }
     if (estado == "borrar"){
-        var fila = j;
+        var fila = pos1;
         for(var n = cnt; n > 0; n--){
             fila--;
             dulce[fila]=null;
@@ -341,24 +341,28 @@ function lineaHorizontal(j, i, cnt, estado){
     if (estado == "final"){
         
         if (cnt < 3){
-            var fila = j;
+            var fila = pos1;
             for(var n = cnt; n > 0; n--){
                 dulce[fila]=null;
                 fila--;
             }
         }
-
-        for (var n = 0; n < 7; n++){
-            if (dulce[n] != null){
-                arrBorrar[n][i] = dulce[n];
-            }else{
-                arrBorrar[n][i] = null;
+        if (linea=="horizontal"){
+            for (var n = 0; n < 7; n++){
+                if (dulce[n] != null){
+                    arrBorrar[n][pos2] = dulce[n];
+                }
+            }
+        }
+        else{
+            for (var n = 0; n < 7; n++){
+                if (dulce[n] != null){
+                    arrBorrar[pos2][n] = n;
+                }
             }
         }
     }
 }
-
-
 
 function compararDulces(){
 
@@ -378,26 +382,62 @@ function compararDulces(){
 
             if (elm == arrPng[j][i]){
                 cnt++;
-                lineaHorizontal(j, i , cnt, "agregar");
+                alineacion(j, i , cnt, "agregar");
             }else{
                 elm = arrPng[j][i];
                 if (cnt < 3 ){
                     /* Se borran el numero de posiciones de cnt hacia atras
                        y se agrega el nuevo elemento en la siguiente posición del arreglo*/
-                    lineaHorizontal(j, i , cnt, "borrar");
+                    alineacion(j, i , cnt, "borrar");
                     cnt = 1;
-                    lineaHorizontal(j, i , cnt, "agregar");
+                    alineacion(j, i , cnt, "agregar");
                     
                 }else{
-                    //agregamos a l
+                    //agregamos el nuevo elemento al array de dulces
                     cnt = 1;
-                    lineaHorizontal(j, i, cnt, "agregar");
+                    alineacion(j, i, cnt, "agregar");
                 }
             }
 
             if(j==6){
                 //pasamos la columna a la tabla matriz de borrar
-                lineaHorizontal(j, i, cnt, "final");
+                alineacion(j, i, cnt, "final", "horizontal");
+            }
+
+        }
+    }
+
+    //BUSQUEDA VERTICAL DE LAS COLUMNAS
+    for(var i=0; i<7; i++){
+        cnt = 0;
+
+        for(j=0; j<7; j++){
+            if (j == 0 ){
+                elm = arrPng[i][j];
+            }
+
+            if (elm == arrPng[i][j]){
+                cnt++;
+                alineacion(j, i, cnt, "agregar");
+            }else{
+                elm = arrPng[i][j];
+                if (cnt < 3 ){
+                    /* Se borran el numero de posiciones de cnt hacia atras
+                       y se agrega el nuevo elemento en la siguiente posición del arreglo*/
+                    alineacion(j, i , cnt, "borrar");
+                    cnt = 1;
+                    alineacion(j, i , cnt, "agregar");
+                    
+                }else{
+                    //agregamos a l
+                    cnt = 1;
+                    alineacion(j, i, cnt, "agregar");
+                }
+            }
+
+            if(j==6){
+                //pasamos la columna a la tabla matriz de borrar
+                alineacion(j, i, cnt, "final", "vertical");
             }
 
         }
