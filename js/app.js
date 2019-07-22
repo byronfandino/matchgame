@@ -1,8 +1,15 @@
 //String para almacenar los nombres de los elementos que se eliminarán
 var nomElemento = "";
 
+//String para almacenar los nombres de los elementos recuperados por cada fila
+var recup = "";
+
 //Contador de movimientos del usuario
 var moveUser = 0;
+
+//Guarda la cantidad de puntos que tiene el usuario
+//1 punto por cada dulce eliminado
+var puntos = 0;
 
 //Guarda la diferencia del desplazamiento para hacer la comparación de desplazamiento
 //pero siempre va a ser positivo.
@@ -41,6 +48,17 @@ var arrBorrar =[
     [null,null,null,null,null,null,null]
 ] 
 
+//Arreglo para registrar la cantidad de posiciones que debe recorrer cada elemento
+var arrCantPos =[
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0],
+    [0,0,0,0,0,0,0]
+] 
+
 //Registro de posiciones de los elementos
 var arrPosicion=[
     //nomElm = guarda el nombre del elemento para encontrarlo y cambiar propiedades del objeto
@@ -50,55 +68,55 @@ var arrPosicion=[
                 con un valor en el top de 0px, mientras que aquellos que SI fueron arrastrados se 
                 quedan en la misma posición*/
     //estado = Se conocerá si el elemento fue eliminado o no.
-    {nomElm: "elm0",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm1",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm2",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm3",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm4",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm5",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm6",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm7",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm8",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm9",  numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm10", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm11", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm12", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm13", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm14", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm15", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm16", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm17", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm18", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm19", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm20", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm21", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm22", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm23", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm24", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm25", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm26", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm27", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm28", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm29", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm30", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm31", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm32", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm33", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm34", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm35", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm36", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm37", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm38", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm39", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm40", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm41", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm42", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm43", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm44", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm45", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm46", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm47", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true},
-    {nomElm: "elm48", numCol: 0, numPng: 0, numPos: 0, posInicial: 0, dragElm: false, estado:true}
+    {nomElm: "elm0",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm1",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm2",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm3",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm4",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm5",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm6",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm7",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm8",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm9",  numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm10", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm11", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm12", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm13", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm14", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm15", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm16", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm17", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm18", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm19", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm20", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm21", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm22", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm23", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm24", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm25", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm26", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm27", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm28", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm29", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm30", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm31", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm32", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm33", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm34", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm35", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm36", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm37", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm38", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm39", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm40", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm41", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm42", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm43", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm44", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm45", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm46", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm47", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true},
+    {nomElm: "elm48", numCol: 0, numPos: 0, cantPos: 0, posInicial: 0, numPng: 0, dragElm: false, estado:true}
     
 ]
 
@@ -126,7 +144,7 @@ $(document).ready(function(){
     /*Se cambia a column-reverse para que los objetos se añadan desde
       la parte superior*/
       $("div[class^='col']").css("flex-flow", "column-reverse wrap");
-      $("div[class^='col']").css("border", "solid 1px red"); /*-------  ELIMINAR  ----------*/
+    //   $("div[class^='col']").css("border", "solid 1px red"); /*-------  ELIMINAR  ----------*/
 });
 
 //Function para generar un número aleatorio para asignar la imagen al elemento.
@@ -134,7 +152,7 @@ function numAleatorio(min, max){
     return Math.round(Math.random() * (max -min) + min);
 }
 
-/* FUNCION PARA CREAR ELEMENTO, CALCULAR POSICIÓN SEGUN DRAGGABLE
+/* FUNCION PARA CREAR ELEMENTO, CALCULAR POSICIÓN SEGUN DRAGGABLE,
    ASGINAR NUMERO DE POSICION, UBICACION DE COLUMNA*/ 
 function crearElemento(numElm, numColumn, numPng, numPosElm){
     var nuevoElemento = $("<div>");
@@ -245,86 +263,10 @@ function crearElemento(numElm, numColumn, numPng, numPosElm){
 
 };
 
-/*Función para PARAR la animación de los elementos a eliminar */
-function pararAnimacion(){
-    clearInterval(temporizador);
-    console.log("Ingresó a la función pararAnimación(). FIN DEL BUCLE");
-    //Ocultar el elemento SIN ELIMINARLO
-
-
-    /*Cambiar el número de la posición de cada uno de los elementos
-      que se encuentren encima de aquellos que se eliminarán*/
-
-
-    //1ro determinar cuantas posiciones deben correr los elementos
-
-
-    //Segundo realizar el cambio en la variable numpos del arreglo
-
-    //Realizar el 
-
-
-
-    $(nomElemento).remove();
-}
-
-/*Función que se encarga de la animación de los elementos a eliminar*/
-function aniElementos(){
-    cntAnimacion ++;
-    $(nomElemento).animate(
-        {
-            'opacity': '0'
-        },
-        200, 
-        function(){
-            $(this).animate(
-                {
-                    'opacity': '1'
-                },
-                200
-            )
-        }
-    )
-    if(cntAnimacion == 5){
-        console.log("Contador: " + cntAnimacion);
-        pararAnimacion();    
-    }
-        
-}
-/*--------------------------------------------------------- */
-function eliminarDulces(){
-    //Recorremos el arreglo para obtener el id de cada elemento de la matriz
-    nomElemento = "";
-    for(var i = 0; i<7; i++){
-        for(var j = 0; j<7; j++){
-            if (arrBorrar[i][j] != null){
-                for (var p = 0; p < 49; p++){
-                    if (arrPosicion[p].numCol == i+1 && arrPosicion[p].numPos == j){
-
-                        
-
-
-                        if (nomElemento==""){
-                            nomElemento = "#" + arrPosicion[p].nomElm; 
-                        }else{
-                            nomElemento = nomElemento + ",#" + arrPosicion[p].nomElm;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    //ejecutamos la variable temporizadora de la animación 
-    temporizador = setInterval(function(){
-        aniElementos();
-    }, 400);
-}
-
 /*Debido a que al mover un dulce cambia la posición, esta función ordenará en la matriz arrPng
   los dulces según la posición que aparezc en el arrPosicion, con el fin de realizar la 
   comparación del alineamiento de los dulces de forma vertical y horizontal*/
-function ordenarDulces(){
+  function ordenarDulces(){
     /*Separamos los dulces en cada uno de los arreglos
       que representan cada una de las columnas*/
     for(var cnt = 0, i = 0; i < 49; i++, cnt++){
@@ -376,6 +318,118 @@ function ordenarDulces(){
     }
 }
 
+
+/*Función para PARAR la animación de los elementos a eliminar */
+function pararAnimacion(){
+    clearInterval(temporizador);
+    console.log("Ingresó a la función pararAnimación(). FIN DEL BUCLE");
+    /*En este punto los dulces se encuentran ocultos */
+    $(nomElemento).css("opacity", "0"); 
+
+    /*Implementamos el numero de posicion*/ 
+    for(var i = 0; i < 7; i++){
+        for(var j = 0; j < 7; j++){
+            for (var p = 0; p < 49; p++){
+                if (arrPosicion[p].numCol == i+1 && arrPosicion[p].numPos == j){
+                    arrPosicion[p].cantPos = arrCantPos[i][j];
+                }
+            }
+        }
+    }
+   //Por último eliminamos los dulces 
+   $(nomElemento).detach();
+
+    //Actualizamos la puntuación determinando la longitud del arreglo nomElemento
+    var arrEliminados = nomElemento.split(",");
+    puntos += arrEliminados.length;
+    $("#score-text").text(puntos);
+
+
+    //Actualizamos la posicion de cada elemento
+    for (var i = 0; i < 49; i++){
+        arrPosicion[i].numPos = arrPosicion[i].numPos - arrPosicion[i].cantPos;
+    }
+
+    // crearElemento(numElm, numColumn, numPng, numPosElm, recuperado)
+    //invocar creacion de elementos eliminados para colocarlos en la parte superior
+    
+    
+    
+    
+        //ejecutamos la variable temporizadora de la animación 
+        // temporizador = setInterval(function(){
+        //     aniElementos(nuevoElemento, 0, 1, 4);
+        // }, 400);
+  
+
+
+    //Crear la funcion de limpiar variables
+
+
+    //Volver a comparar
+}
+
+
+
+/*Función que se encarga de la animación de los elementos a eliminar*/
+function aniElementos(idDulce, inicio, fin, repeticion){
+    cntAnimacion ++;
+    $(idDulce).animate(
+        {
+            'opacity': inicio
+        },
+        200, 
+        function(){
+            $(this).animate(
+                {
+                    'opacity': fin
+                },
+                200
+            )
+        }
+    )
+    if(cntAnimacion == repeticion){
+        console.log("Contador: " + cntAnimacion);
+        cntAnimacion = 0;
+        pararAnimacion();    
+    }
+}
+
+function eliminarDulces(){
+    /*Recorremos el arreglo para obtener el id de cada elemento de la matriz
+      y determinar el numero de posiciones que debe recorrer cada elemento*/
+    nomElemento = "";
+    for(var i = 0; i<7; i++){
+        for(var j = 0; j<7; j++){
+            if (arrBorrar[i][j] != null){
+                for (var p = 0; p < 49; p++){
+                    if (arrPosicion[p].numCol == i+1 && arrPosicion[p].numPos == j){
+                        if (nomElemento==""){
+                            nomElemento = "#" + arrPosicion[p].nomElm; 
+                        }else{
+                            nomElemento = nomElemento + ",#" + arrPosicion[p].nomElm;
+                        }
+                        //Cambiamos el estado a false para saber qué elementos fueron eliminados
+                        arrPosicion[p].estado = false;
+                        arrPosicion[p].posInicial = 0;
+                    }
+                }
+                
+                /*En el arreglo incrementamos el numero de veces en que la misma posicion
+                  se debe desplazar para efectuar la animación de los elementos existentes*/
+                for (var n = j; n<7; n++){
+                    arrCantPos[i][n]++;
+                }
+            }
+        }
+    }
+
+    //ejecutamos la variable temporizadora de la animación 
+    temporizador = setInterval(function(){
+        aniElementos(nomElemento, 1, 0, 5);
+    }, 400);
+}
+
 /*Una vez ordenados los dulces se utiliza la funcion alineación para determinar en la matriz 
   arrBorrar los elementos que cumplen la condicion de ser "ELIMINADOS" tanto de forma
   vertical como horizontal*/
@@ -419,7 +473,7 @@ function alineacion(pos1, pos2, cnt, estado, linea){
 }
 
 /*La función comparar dulces, primero ejecuta la función ordenar dulces 
-y luego realiza la verificación de cumplimiento de dulces repetidos*/
+y luego realiza la verificación de cumplimiento de dulces repetidos en secuencia*/
 function compararDulces(){
 
     ordenarDulces();
