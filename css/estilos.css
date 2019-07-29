@@ -102,15 +102,3 @@ div[class^='col']{
   width: 99.4px;
   height: 96px;
 }
-
-/* Clases para eliminar posteriormente*/
-
-.activaElemento{
-  background-color:yellow;
-}
-
-.sobreElemento{
-  background-color: aqua;
-}
-
-/***************************************/
