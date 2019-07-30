@@ -407,11 +407,9 @@ function columnaDrop(){
                         $(this).css("z-index", "0");
                     }
                 )             
-            }else{
-                main();
-                repetidor = setInterval(main, 3200);
-                
-            } 
+            }
+            setTimeout(main, 300);
+            repetidor = setInterval(main, 3500); 
         }
     })
 }
@@ -590,13 +588,11 @@ function compararDulces(){
         for(var j = 0; j < 7; j ++){
             if (arrBorrar[i][j] != null){
                 verComparar = true;
-                console.log("verComparar es verdadero , verComparar = ", verComparar);
                 return verComparar;
             }
         }
     }
     if (verComparar == false){
-        console.log("verComparar es false, verComparar = ", verComparar);
         return verComparar;
     }
 }
@@ -810,15 +806,13 @@ function main(){
     console.log("INICIO DE LA 'FUNCION PRINCIPAL'");
     ordenarDulces();
     if (compararDulces()){
-        console.log("VERDADERO compDulces = ", verComparar);
+        console.log("SI HYA DULCES REPETIDOS --> verComparar = ", verComparar);
         prepararEliminacion();
         setTimeout(eliminarDulces, 1700);
         setTimeout(recuperarDulces, 2000);
         setTimeout(limpiar, 3150);
-        console.log("REPETIDOR = ", repetidor);
     }else{
-        console.log("NO HAY MAS DULCES PARA COMPARAR!!!! compDulces = ", verComparar);
-        console.log("arrPng = ", arrPng);
+        console.log("NO HAY MAS DULCES PARA COMPARAR!!!! --> verComparar = ", verComparar);
         clearInterval(repetidor);
         console.log("REPETIDOR = ", repetidor);
     }
@@ -845,22 +839,17 @@ $(document).ready(function(){
       $("div[class^='col']").css("flex-flow", "column-reverse wrap");
  
     $(".btn-reinicio").click(function(){
+
         if ($(this).text() == "Iniciar"){
             $(this).text("Reiniciar");
             asignarDulces();
             main();
             repetidor = setInterval(main, 3200);
         }else{
-            clearInterval(repetidor);
-            repetidor ="";
-            $(".elemento").remove();
-            limpiar();
-            $("#score-text").text("0");
-            $("#movimientos-text").text("0");
-            $("#timer").text("02:00");
-            $(this).text("Iniciar");
-
+            //Recargar la pagina
+            location.reload();
         }
+
     }) 
 });
 

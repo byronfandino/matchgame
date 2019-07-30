@@ -2,6 +2,7 @@
   font-family: gameFont;
   src: url('../fonts/PressStart2P.ttf');
 }
+
 *{
   box-sizing: border-box;
 }
