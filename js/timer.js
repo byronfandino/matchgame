@@ -1,9 +1,9 @@
-var puntaje = "";
 var verificador ="";
 var conteoSegundos = 60;
 var conteoMinutos = 1;
 var tiempo = $("#timer").text(); 
 var tiempo = tiempo.split(":");
+
 
 function cronometro (){
     conteoSegundos--;
@@ -20,10 +20,12 @@ function cronometro (){
         }        
         else{
             clearInterval(verificador);
-            $(".elemento").remove();
             quitarTablero();
             quitarTiempo();
+            $("title-estado").remove();
             setTimeout(tabPuntos,500);
+            $(".elemento").remove();
+            $(".panel-tablero").before("<h2 style='color: yellow; font-size:3em; font-family: gameFont; text-align: center; width:100%'>Juego Terminado</h2>")
         }
     }
 }
@@ -54,26 +56,25 @@ function quitarTiempo(){
             height: 0,
             border: 0
         },
-        500
+        500,
+        function(){
+            $(".time").remove();
+        }
     );
 }
 
 function tabPuntos (){
-    puntaje = $("#score-text").text();
     $(".panel-score").animate(
         {
           width: "+=1200"
         },
-        500,
-        function(){
-            $("#score-text").text(puntaje);
-        }
+        500
     )
 }
 
 $(document).ready(function(){
     $(".btn-reinicio").click(function(){
-        if ($(this).text() == "Iniciar"){
+        if ($(this).text() == "Iniciar"){            
             verificador = setInterval(cronometro,1000);
         }
     }) 

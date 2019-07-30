@@ -179,21 +179,23 @@ function recuperarElemento(nombreElm, numColumn, numPng, numPosElm){
     nuevaImagen.attr("src", "image/" + numPng + ".png");
     nuevaImagen.attr("alt", "Dulce" + numPng);
     nuevaImagen.css("width", "100%");
-
-    $(nuevoElemento).append(nuevaImagen);
-    $(".col-" + numColumn).append(nuevoElemento);
+    
+    if ($("#timer").text()!=""){
+        $(nuevoElemento).append(nuevaImagen);
+        $(".col-" + numColumn).append(nuevoElemento);
+        var numDulce = cadena.substr(4);
+        console.log("Funcion RecuperarElemento() numDUulce = ", numDulce);
+        elementoDrag(numDulce);
+        columnaDrop();
+        elementoDrop();
+        
+        var moverElm = 0;
+        moverElm = -96 * (6 - numPosElm);
+        $(nombreElm).css("top", moverElm);
+    
+    }
 
     
-    var numDulce = cadena.substr(4);
-    console.log("Funcion RecuperarElemento() numDUulce = ", numDulce);
-    elementoDrag(numDulce);
-    columnaDrop();
-    elementoDrop();
-    
-    var moverElm = 0;
-    moverElm = -96 * (6 - numPosElm);
-    $(nombreElm).css("top", moverElm);
-
     }else{
         return;
     }
@@ -440,6 +442,13 @@ function asignarDulces(){
   los dulces según la posición que aparece en el arrPosicion, con el fin de realizar la 
   comparación del alineamiento de los dulces de forma vertical y horizontal*/
 function ordenarDulces(){
+
+    $(".elemento").draggable(
+        {
+            cancel: ".elemento"
+        }
+    )
+
     /*Separamos los dulces en cada uno de los arreglos*/
     for (var i = 0; i < 7; i++){
         for (var j = 0; j < 7; j++){
@@ -666,7 +675,8 @@ function aniParpadear(){
 /*FUNCION QUE ELIMINA LOS DULCES */
 function eliminarDulces(){
     
-    console.log("INICIO de la función 'eliminarDulces'");
+    if ($("#timer").text()!=""){
+        console.log("INICIO de la función 'eliminarDulces'");
 
     /*En este punto los dulces se encuentran ocultos */
     $(nomElemento).css("opacity", "0"); 
@@ -707,6 +717,7 @@ function eliminarDulces(){
         }
     }
 
+
     //Actualizamos la puntuación determinando la longitud del arreglo nomElemento
     var arrEliminados = nomElemento.split(",");
     console.log("FUNCION eliminarDulces(), actualizamos la puntuación general");
@@ -721,46 +732,50 @@ function eliminarDulces(){
     //Convertimos arrNom en un arreglo 
     arrNom = nomElemento.split(",");
 
+    }
+    
 }
 
 function recuperarDulces(){
-    idBorrado = "";
-    if (arrNom.length != 0){
-        console.log ("INICIO DE LA FUNCIÓN recuperarDulces()");
-        for (var i = 0; i < 7; i++){
-        recup[i] = arrCantPos[i][6];
-        }
-            
-        for (var i = 0; i < 7; i++){
-            if (recup[i] == 0){
-                continue;
-            }else{
-                
-                var nPng = numAleatorio(1,4);
-                var nPos = 7 - recup[i];
-                recuperarElemento(arrNom[0], i+1, nPng, nPos);
-                //eliminamos la primera posición del arreglo que almacena los nombres eliminados
-                var dulceBorrado = arrNom.shift();
-                if (idBorrado == ""){
-                    idBorrado = dulceBorrado;
-                }else{
-                    idBorrado = idBorrado + "," + dulceBorrado;
-                }
-                //restamos en uno la última posición del arreglo principal
-                arrCantPos[i][6] -=1;
+    if ($("#timer").text()!=""){
+        idBorrado = "";
+        if (arrNom.length != 0){
+            console.log ("INICIO DE LA FUNCIÓN recuperarDulces()");
+            for (var i = 0; i < 7; i++){
+            recup[i] = arrCantPos[i][6];
             }
-        }
-
-        if (idBorrado != ""){
-            $(idBorrado).animate(
-                {
-                    top: 0
-                },
-                160,
-                function(){
-                    verificarDulcesRecuperados();
-                } 
-            );
+                
+            for (var i = 0; i < 7; i++){
+                if (recup[i] == 0){
+                    continue;
+                }else{
+                    
+                    var nPng = numAleatorio(1,4);
+                    var nPos = 7 - recup[i];
+                    recuperarElemento(arrNom[0], i+1, nPng, nPos);
+                    //eliminamos la primera posición del arreglo que almacena los nombres eliminados
+                    var dulceBorrado = arrNom.shift();
+                    if (idBorrado == ""){
+                        idBorrado = dulceBorrado;
+                    }else{
+                        idBorrado = idBorrado + "," + dulceBorrado;
+                    }
+                    //restamos en uno la última posición del arreglo principal
+                    arrCantPos[i][6] -=1;
+                }
+            }
+    
+            if (idBorrado != ""){
+                $(idBorrado).animate(
+                    {
+                        top: 0
+                    },
+                    160,
+                    function(){
+                        verificarDulcesRecuperados();
+                    } 
+                );
+            }
         }
     }
 }
@@ -803,19 +818,37 @@ function limpiar(){
 
 /************************* FUNCION PRINCIPAL ************************/
 function main(){
-    console.log("INICIO DE LA 'FUNCION PRINCIPAL'");
-    ordenarDulces();
-    if (compararDulces()){
-        console.log("SI HYA DULCES REPETIDOS --> verComparar = ", verComparar);
-        prepararEliminacion();
-        setTimeout(eliminarDulces, 1700);
-        setTimeout(recuperarDulces, 2000);
-        setTimeout(limpiar, 3150);
+    if ($("#timer").text()!=""){
+        console.log("INICIO DE LA 'FUNCION PRINCIPAL'");
+        ordenarDulces();
+        if (compararDulces()){
+            console.log("SI HYA DULCES REPETIDOS --> verComparar = ", verComparar);
+            prepararEliminacion();
+            setTimeout(eliminarDulces, 1700);
+            setTimeout(recuperarDulces, 2000);
+            setTimeout(limpiar, 3150);
+            $("#title-estado").css("color", "rgb(255, 0, 232)");
+            $("#title-estado").text("VERIFICANDO DULCES....");
+            
+
+        }else{
+            console.log("NO HAY MAS DULCES PARA COMPARAR!!!! --> verComparar = ", verComparar);
+            clearInterval(repetidor);
+            $(".elemento").draggable(
+                {
+                    cancel: ""
+                }
+            );
+            $("#title-estado").css("color", "rgb(66, 255, 0)")
+            $("#title-estado").text("PUEDES ARRASTRAR LOS DULCES");
+
+            console.log("REPETIDOR = ", repetidor);
+        }
     }else{
-        console.log("NO HAY MAS DULCES PARA COMPARAR!!!! --> verComparar = ", verComparar);
         clearInterval(repetidor);
-        console.log("REPETIDOR = ", repetidor);
+        console.log("Estamos en la funcion main()...se termino el tiempo")
     }
+
 }
 
 // CAMBIAR COLOR DE TÍTULO
@@ -833,18 +866,31 @@ $(document).ready(function(){
 
     /*Se cambia el valor flex-end por flex-start, para que 
       los objetos aparezcan al final de la columna*/
-      $("div[class^='col']").css("justify-content", "flex-start");
+    $("div[class^='col']").css("justify-content", "flex-start");
     /*Se cambia a column-reverse para que los objetos se añadan desde
       la parte superior*/
-      $("div[class^='col']").css("flex-flow", "column-reverse wrap");
- 
+    $("div[class^='col']").css("flex-flow", "column-reverse wrap");
+    
+    var titleEstado = $("<h2>");
+    titleEstado.attr("id", "title-estado");
+    titleEstado.css("background-color", "rgba(0, 0, 0, 0.7);");
+    titleEstado.css("color", "white");
+    titleEstado.css("font-size", "2.5em");
+    titleEstado.css("font-family", "gameFont");
+    titleEstado.css("width", "100%");
+    titleEstado.css("text-align", "center");
+    $("body").append(titleEstado);
+
+
     $(".btn-reinicio").click(function(){
 
         if ($(this).text() == "Iniciar"){
             $(this).text("Reiniciar");
+            
             asignarDulces();
             main();
             repetidor = setInterval(main, 3200);
+
         }else{
             //Recargar la pagina
             location.reload();
